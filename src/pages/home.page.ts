@@ -2,42 +2,48 @@ import { BasePage } from './base.page';
 import { Page, Locator } from '@playwright/test';
 
 export class HomePage extends BasePage {
-  // Banner Elements
-  readonly banner: Locator;
-  readonly bannerTitle: Locator;
-  readonly bannerText: Locator;
-    
-  // Feed Tabs
-  readonly tabYourFeed: Locator;
-  readonly tabGlobalFeed: Locator;
-  readonly activeTab: Locator;
+    // Banner Elements
+    readonly banner: Locator;
+    readonly bannerTitle: Locator;
+    readonly bannerText: Locator;
 
-  readonly popularTagsSection: Locator; 
+    // Feed Tabs
+    readonly tabYourFeed: Locator;
+    readonly tabGlobalFeed: Locator;
+    readonly activeTab: Locator;
 
-  constructor(page: Page) {
-    super(page);
+    readonly firstArticlePreview: Locator;
+    readonly firstArticleTitle: Locator;
 
-    this.banner = page.locator('.banner');
-    this.bannerTitle = page.locator('.logo-font');
-    this.bannerText = page.locator('.banner p');
-    
-    this.tabYourFeed = page.locator('.nav-link').filter({ hasText: 'Your Feed' });
-    this.tabGlobalFeed = page.locator('.nav-link').filter({ hasText: 'Global Feed' });
-    this.activeTab = page.locator('.feed-toggle .nav-link.active');
+    readonly popularTagsSection: Locator;
 
-    this.popularTagsSection = page.locator('.sidebar');
-  }
+    constructor(page: Page) {
+        super(page);
 
-  // Actions
-  async goto() {
-    await this.page.goto('/');
-  }
+        this.banner = page.locator('.banner');
+        this.bannerTitle = page.locator('.logo-font');
+        this.bannerText = page.locator('.banner p');
 
-  async clickGlobalFeed() {
-    await this.tabGlobalFeed.click();
-  }
+        this.tabYourFeed = page.locator('.nav-link').filter({ hasText: 'Your Feed' });
+        this.tabGlobalFeed = page.locator('.nav-link').filter({ hasText: 'Global Feed' });
+        this.activeTab = page.locator('.feed-toggle .nav-link.active');
 
-  async clickYourFeed() {
-    await this.tabYourFeed.click();
-  }
+        this.firstArticlePreview = page.locator('.article-preview').first();
+        this.firstArticleTitle = this.firstArticlePreview.locator('h1');
+
+        this.popularTagsSection = page.locator('.sidebar');
+    }
+
+    // Actions
+    async goto() {
+        await this.page.goto('/');
+    }
+
+    async clickGlobalFeed() {
+        await this.tabGlobalFeed.click();
+    }
+
+    async clickYourFeed() {
+        await this.tabYourFeed.click();
+    }
 }
