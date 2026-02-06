@@ -2,6 +2,11 @@
 import { request, FullConfig } from '@playwright/test';
 import fs from 'fs';
 
+/**
+ * Global Setup Utility
+ * Purpose: Performs API-based authentication before the test suite starts.
+ * Benefit: Saves the authenticated state (JWT) into 'state.json' to bypass UI login for all tests, significantly reducing execution time.
+ */
 async function globalSetup(config: FullConfig) {
     const { baseURL, storageState } = config.projects[0].use;
 

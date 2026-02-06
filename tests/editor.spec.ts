@@ -2,13 +2,23 @@
 import { test, expect } from '@fixtures/pom';
 import { faker } from '@faker-js/faker';
 
+/**
+ * Module: Editor (Article Management)
+ * * This test suite demonstrates two different automation strategies:
+ * * 1. Pure UI Testing: Full end-to-end flow for creating an article.
+ * - [EDT-02]: Create Article & Verify (Detail + Global Feed)
+ * * 2. Hybrid Testing (API + UI): 
+ * - [EDT-12]: Edit Article (Update Body & Description)
+ * * Technical Highlights:
+ * - Setup: API seeding for fast data preparation.
+ * - Action/Verify: UI interaction for core business logic validation.
+ * - Teardown: API cleanup to ensure perfect test isolation.
+ */
 test.describe('Module: Editor (Create Article)', () => {
 
     test('EDT-02: Create Article & Verify (Detail + Global Feed)', async ({ editorPage, articlePage, homePage }) => {
 
-        // -----------------------------------------------------------------------
-        // Step 0: Test Data Preparation
-        // -----------------------------------------------------------------------
+        // 🏗️ Step 0: Article Data Preparation
         const articleData = {
             title: faker.lorem.sentence(3),
             description: faker.lorem.sentences(2),
@@ -18,9 +28,7 @@ test.describe('Module: Editor (Create Article)', () => {
 
         console.log(`📝 Starting Test for: "${articleData.title}"`);
 
-        // -----------------------------------------------------------------------
-        // Step 1: Create Article Action
-        // -----------------------------------------------------------------------
+        // 🏃 Step 1: Create a new article via UI
         await test.step('1. Create New Article', async () => {
             await editorPage.goto();
             await editorPage.createArticle(
@@ -31,9 +39,7 @@ test.describe('Module: Editor (Create Article)', () => {
             );
         });
 
-        // -----------------------------------------------------------------------
-        // Step 2: Verify Detail Page
-        // -----------------------------------------------------------------------
+        // 👀 Step 2: Verify the article detail page
         await test.step('2. Verify Article Detail Page', async () => {
             // URL Validation
             const slug = articleData.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
@@ -49,9 +55,7 @@ test.describe('Module: Editor (Create Article)', () => {
             await expect(articlePage.commentForm).toBeVisible();
         });
 
-        // -----------------------------------------------------------------------
-        // Step 3: Verify Global Feed
-        // -----------------------------------------------------------------------
+        // 👀 Step 3: Verify the article entry on the Global Feed
         await test.step('3. Verify Global Feed Entry', async () => {
             console.log('🌍 Verifying Global Feed...');
 
@@ -66,14 +70,14 @@ test.describe('Module: Editor (Create Article)', () => {
 });
 
 // Strategy: Hybrid Testing (API for Setup/Teardown, UI for Validation)
-test.describe('Module: Editor (Update Content - Hybrid Strategy)', () => {
+test.describe('Module: Editor (Update Article - Hybrid Strategy)', () => {
     let token: string;
     let slug: string;
 
     // Define the API endpoint explicitly
     const API_URL = 'https://conduit-api.bondaracademy.com/api';
 
-    // 1. Authenticate via API (get auth token) - runs once before all tests in this block
+    // 🏗️ Step 1: Authenticate via API (get auth token) - runs once before all tests in this block
     test.beforeAll(async ({ request }) => {
 
         console.log(`🔑 Logging in as: ${process.env.USER_EMAIL}`);
@@ -96,8 +100,8 @@ test.describe('Module: Editor (Update Content - Hybrid Strategy)', () => {
         const responseBody = await response.json();
         token = responseBody.user.token;
     });
-    // 2. [Setup] Seed Data via API
-    // Creates a fresh article to ensure test isolation.
+
+    // 🏗️ Step 2: Seed test data via API for test isolation
     test.beforeEach(async ({ request }) => {
         const articleData = {
             article: {
@@ -120,43 +124,39 @@ test.describe('Module: Editor (Update Content - Hybrid Strategy)', () => {
         console.log(`🌱 Created Article via API: ${slug}`);
     });
 
-    // 3. [Test] Edit Article via UI
+    // 🏃 Step 3: Edit the seeded article via UI
     test('EDT-12: Edit Article (API Created) - Update Body & Description', async ({ editorPage, articlePage, homePage }) => {
 
         const updatedBody = `Updated Body Content via UI - ${faker.string.numeric(5)}`;
         const updatedDescription = `Updated Desc via UI - ${faker.string.numeric(5)}`;
 
-        // 1. Setup
         await editorPage.goto(slug);
 
-        // 2. Action
         await test.step('Update Content', async () => {
             await expect(editorPage.inputTitle).not.toBeEmpty();
 
-            // 👇 2. Update Description (This is what appears on the Feed!)
             await editorPage.inputDescription.fill(updatedDescription);
             await editorPage.inputBody.fill(updatedBody);
             await editorPage.btnPublish.click();
         });
 
-        // 3. Verify Detail Page (Body is visible here)
+        // 👀 Step 4: Verify the updated content on the Detail Page
         await test.step('Verify Detail Page', async () => {
             await expect(articlePage.articleBody).toContainText(updatedBody);
         });
 
-        // 4. Verify Global Feed (Description is visible here)
+        // 👀 Step 5: Verify the update on the Global Feed
         await test.step('Verify Global Feed', async () => {
             await homePage.goto();
             await homePage.tabGlobalFeed.click();
             await expect(homePage.tabGlobalFeed).toHaveClass(/active/);
 
-            // 👇 3. Verify the updated Description appears in the list
             const articleLocator = homePage.page.locator('.article-preview').filter({ hasText: updatedDescription });
             await expect(articleLocator).toBeVisible();
         });
     });
 
-    // 4. [Teardown] Cleanup Data via API for test isolation
+    // 🧹 Step 6: Cleanup test data via API after the test
     test.afterEach(async ({ request }) => {
         if (slug) {
             const response = await request.delete(`${API_URL}/articles/${slug}`, {
