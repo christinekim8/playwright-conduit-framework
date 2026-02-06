@@ -1,3 +1,4 @@
+//src/pages/base.page.ts
 import { Page, Locator } from '@playwright/test';
 
 export class BasePage {
@@ -24,7 +25,7 @@ export class BasePage {
         this.navSettings = page.locator('ul.nav.navbar-nav li a').filter({ hasText: 'Settings' });
 
         // Dynamic Username Locator
-        const username = process.env.TEST_USER_NAME || 'username10';
+        const username = process.env.USER_NAME || 'username10';
         this.navUsername = page.locator('ul.nav.navbar-nav li a').filter({ hasText: username });
 
         // Footer

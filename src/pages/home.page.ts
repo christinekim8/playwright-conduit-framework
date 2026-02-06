@@ -1,3 +1,4 @@
+//src/pages/home.page.ts
 import { BasePage } from './base.page';
 import { Page, Locator } from '@playwright/test';
 

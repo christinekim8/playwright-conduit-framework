@@ -1,3 +1,4 @@
+//src/types/index.ts
 /**
  * Represents the User object returned by the Conduit API.
  */

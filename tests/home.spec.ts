@@ -1,3 +1,4 @@
+//tests/home.spec.ts
 import { test, expect } from '@fixtures/pom';
 
 // ---------------------------------------------------------------------------

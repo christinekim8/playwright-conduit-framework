@@ -1,3 +1,4 @@
+//src/fixtures/pom.ts
 import { test as base } from '@playwright/test';
 import { HomePage } from '@pages/home.page';
 import { LoginPage } from '@pages/login.page';
