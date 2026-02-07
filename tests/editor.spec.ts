@@ -4,15 +4,13 @@ import { faker } from '@faker-js/faker';
 
 /**
  * Module: Editor (Article Management)
- * * This test suite demonstrates two different automation strategies:
- * * 1. Pure UI Testing: Full end-to-end flow for creating an article.
- * - [EDT-02]: Create Article & Verify (Detail + Global Feed)
- * * 2. Hybrid Testing (API + UI): 
- * - [EDT-12]: Edit Article (Update Body & Description)
+ * * Test Scenarios:
+ * - [EDT-02]: Create Article & Verify - Full E2E flow from creation to feed. 
+ * - [EDT-12]: Edit Article (Hybrid) - Efficient update using API Seeding. 
  * * Technical Highlights:
- * - Setup: API seeding for fast data preparation.
- * - Action/Verify: UI interaction for core business logic validation.
- * - Teardown: API cleanup to ensure perfect test isolation.
+ * - Hybrid Strategy: Using API for fast setup (Seeding) and teardown (Cleanup).
+ * - Component Interaction: Multi-page flow (Editor -> Article -> Home).
+ * - Data Management: Leveraging @faker-js for dynamic and unique content.
  */
 test.describe('Module: Editor (Create Article)', () => {
 

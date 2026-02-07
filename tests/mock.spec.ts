@@ -3,13 +3,13 @@ import { test, expect } from '@fixtures/pom';
 
 /**
  * Module: Network Mocking
- * * This test suite demonstrates the ability to intercept network requests 
- * and simulate various backend states to verify UI resilience:
- * - [MOCK-01]: Verify "Your Feed" Empty State (Force empty data via response mocking)
- * - [MOCK-02]: Verify "Global Feed" Error Handling (Simulate Server Crash - 500 Error)
+ * * Test Scenarios:
+ * - [MOCK-01]: Your Feed Empty State - Simulated via response mocking.
+ * - [MOCK-02]: Global Feed Error Handling - Simulated via 500 server error.
  * * Technical Highlights:
  * - Network Interception: Using page.route() to manipulate API responses.
- * - Resilience Testing: Ensuring the UI handles empty data and server errors gracefully.
+ * - Resilience Testing: Validating UI behavior for edge cases (Empty/Error states).
+ * - Sync: Ensuring UI stability during dynamic data transitions.
  */
 test.describe('Module: Network Mocking', () => {
 
