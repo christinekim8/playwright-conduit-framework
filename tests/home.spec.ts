@@ -1,6 +1,7 @@
 //tests/home.spec.ts
 import { test, expect } from '@fixtures/pom';
 import { faker } from '@faker-js/faker';
+import { API_URL } from '../playwright.config';
 
 /**
  * Module: Home Page (UI, Navigation & Advanced Dynamic Logic)
@@ -82,7 +83,6 @@ test.describe('Module: Home Page (Logged-in View)', () => {
 test.describe('Module: Home Page (Pagination & Search)', () => {
 
     let targetArticleTitle: string;
-    const API_URL = 'https://conduit-api.bondaracademy.com/api';
 
     // 🏗️ Step 1: API Seeding - Create a large dataset to ensure pagination exists
     // 💡 Skill Highlight: Using API to control test preconditions for stable results.

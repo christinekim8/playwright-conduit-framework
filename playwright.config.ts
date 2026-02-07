@@ -1,5 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 import * as dotenv from 'dotenv';
+//API URL
+export const API_URL = 'https://conduit-api.bondaracademy.com/api';
 
 dotenv.config();
 

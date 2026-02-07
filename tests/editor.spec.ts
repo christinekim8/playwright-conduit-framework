@@ -1,6 +1,7 @@
 //tests/editor.spec.ts
 import { test, expect } from '@fixtures/pom';
 import { faker } from '@faker-js/faker';
+import { API_URL } from '../playwright.config';
 
 /**
  * Module: Editor (Article Management)
@@ -71,10 +72,7 @@ test.describe('Module: Editor (Create Article)', () => {
 test.describe('Module: Editor (Update Article - Hybrid Strategy)', () => {
     let token: string;
     let slug: string;
-
-    // Define the API endpoint explicitly
-    const API_URL = 'https://conduit-api.bondaracademy.com/api';
-
+    
     // 🏗️ Step 1: Authenticate via API (get auth token) - runs once before all tests in this block
     test.beforeAll(async ({ request }) => {
 
