@@ -24,7 +24,7 @@ export class BasePage {
 
         // Initialize GNB locators using getByRole for better accessibility-based testing
         this.brandLogo = page.locator('.navbar-brand');
-        this.navHome = page.getByRole('link', { name: 'Home' });
+        this.navHome = page.locator('nav').getByRole('link', { name: 'Home' })
         this.navSignIn = page.getByRole('link', { name: 'Sign in' });
         this.navSignUp = page.getByRole('link', { name: 'Sign up' });
         this.navNewArticle = page.getByRole('link', { name: /New Article/i });

@@ -7,7 +7,7 @@ dotenv.config();
 
 export default defineConfig({
   testDir: './tests',
-  
+
   // Run this file before tests start (fetch login token)
   globalSetup: require.resolve('./src/utils/global-setup'),
 
@@ -18,7 +18,7 @@ export default defineConfig({
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
   /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? 1 : 2,
   reporter: [
     ['list'],
     ['html'],
@@ -40,21 +40,21 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { 
+      use: {
         ...devices['Desktop Chrome']
       }
     },
-    // {
-    //   name: 'firefox',
-    //   use: { 
-    //     ...devices['Desktop Firefox']
-    //   }
-    // },
-    // {
-    //   name: 'webkit',
-    //   use: { 
-    //     ...devices['Desktop Safari']
-    //   }
-    // }
+    {
+      name: 'firefox',
+      use: {
+        ...devices['Desktop Firefox']
+      }
+    },
+    {
+      name: 'webkit',
+      use: {
+        ...devices['Desktop Safari']
+      }
+    }
   ]
 });
