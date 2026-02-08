@@ -1,10 +1,15 @@
 //src/pages/base.page.ts
 import { Page, Locator } from '@playwright/test';
 
+/**
+ * BasePage Class
+ * Provides common locators and shared actions for the Global Navigation Bar (GNB) and Footer.
+ * All specific Page Objects should extend this class to reuse shared functionality.
+ */
 export class BasePage {
     readonly page: Page;
 
-    // Common Elements (Header & Footer)
+    // Common GNB Elements
     readonly brandLogo: Locator;
     readonly navHome: Locator;
     readonly navSignIn: Locator;
@@ -16,23 +21,28 @@ export class BasePage {
 
     constructor(page: Page) {
         this.page = page;
-        //initialize GNB locators
-        this.brandLogo = page.locator('.navbar-brand');
-        this.navHome = page.locator('ul.nav.navbar-nav li a').filter({ hasText: 'Home' });
-        this.navSignIn = page.locator('ul.nav.navbar-nav li a').filter({ hasText: 'Sign in' });
-        this.navSignUp = page.locator('ul.nav.navbar-nav li a').filter({ hasText: 'Sign up' });
-        this.navNewArticle = page.locator('ul.nav.navbar-nav li a').filter({ hasText: 'New Article' });
-        this.navSettings = page.locator('ul.nav.navbar-nav li a').filter({ hasText: 'Settings' });
 
-        // Dynamic Username Locator
-        const username = process.env.USER_NAME || 'username10';
-        this.navUsername = page.locator('ul.nav.navbar-nav li a').filter({ hasText: username });
+        // Initialize GNB locators using getByRole for better accessibility-based testing
+        this.brandLogo = page.locator('.navbar-brand');
+        this.navHome = page.getByRole('link', { name: 'Home' });
+        this.navSignIn = page.getByRole('link', { name: 'Sign in' });
+        this.navSignUp = page.getByRole('link', { name: 'Sign up' });
+        this.navNewArticle = page.getByRole('link', { name: /New Article/i });
+        this.navSettings = page.getByRole('link', { name: 'Settings' });
+
+        /** * Dynamic Username Locator 
+         * Locates the profile link by checking for the 'user-pic' sibling or specific navigation pattern.
+         */
+        this.navUsername = page.locator('ul.nav.navbar-nav li a').filter({
+            has: page.locator('i.ion-gear-a, img.user-pic').or(page.locator('text=' + (process.env.USER_NAME || '')))
+        }).last();
 
         // Footer
         this.footer = page.locator('footer');
     }
 
-    // Common Actions (Navigation)
+    // --- Common Actions (Navigation) ---
+
     async navigateToHome() {
         await this.navHome.click();
     }

@@ -22,7 +22,8 @@
       "@pages/*": ["src/pages/*"],
       "@utils/*": ["src/utils/*"],
       "@fixtures/*": ["src/fixtures/*"],
-      "@types/*": ["src/types/*"]
+      "@types/*": ["src/types/*"],
+      "@helpers/*": ["src/helpers/*"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx", "playwright.config.ts"],

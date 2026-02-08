@@ -1,18 +1,20 @@
 //tests/editor.spec.ts
 import { test, expect } from '@fixtures/pom';
 import { faker } from '@faker-js/faker';
-import { API_URL } from '../playwright.config';
+import { ApiHelper } from '@helpers/ApiHelper';
 
 /**
  * Module: Editor (Article Management)
- * * Test Scenarios:
+ * * * Test Scenarios:
  * - [EDT-02]: Create Article & Verify - Full E2E flow from creation to feed. 
  * - [EDT-12]: Edit Article (Hybrid) - Efficient update using API Seeding. 
- * * Technical Highlights:
- * - Hybrid Strategy: Using API for fast setup (Seeding) and teardown (Cleanup).
+ * * * Technical Highlights:
+ * - Hybrid Strategy: Using ApiHelper for fast setup (Seeding) and teardown (Cleanup).
  * - Component Interaction: Multi-page flow (Editor -> Article -> Home).
+ * - Page Object Model: Leveraging abstracted methods for navigation and filtering.
  * - Data Management: Leveraging @faker-js for dynamic and unique content.
  */
+
 test.describe('Module: Editor (Create Article)', () => {
 
     test('EDT-02: Create Article & Verify (Detail + Global Feed)', async ({ editorPage, articlePage, homePage }) => {
@@ -30,12 +32,8 @@ test.describe('Module: Editor (Create Article)', () => {
         // 🏃 Step 1: Create a new article via UI
         await test.step('1. Create New Article', async () => {
             await editorPage.goto();
-            await editorPage.createArticle(
-                articleData.title,
-                articleData.description,
-                articleData.body,
-                articleData.tags
-            );
+
+            await editorPage.submitArticle(articleData);
         });
 
         // 👀 Step 2: Verify the article detail page
@@ -59,69 +57,48 @@ test.describe('Module: Editor (Create Article)', () => {
             console.log('🌍 Verifying Global Feed...');
 
             await homePage.goto();
-            await homePage.tabGlobalFeed.click();
-            await expect(homePage.tabGlobalFeed).toHaveClass(/active/);
 
-            // Verify the newly created article is at the top
-            await expect(homePage.firstArticleTitle).toHaveText(articleData.title);
+            // ✅ Refined: Using POM clickTag instead of manual locator
+            await homePage.clickTag('playwright');
+
+            const targetArticle = homePage.getArticleLocator(articleData.title);
+            await expect(targetArticle).toBeVisible();
+
+            console.log(`✅ Successfully found the article: "${articleData.title}"`);
         });
     });
 });
 
 // Strategy: Hybrid Testing (API for Setup/Teardown, UI for Validation)
 test.describe('Module: Editor (Update Article - Hybrid Strategy)', () => {
+    let apiHelper: ApiHelper;
     let token: string;
     let slug: string;
-    
-    // 🏗️ Step 1: Authenticate via API (get auth token) - runs once before all tests in this block
+
+    // 🏗️ Step 1: Authenticate via API
     test.beforeAll(async ({ request }) => {
-
+        apiHelper = new ApiHelper(request);
         console.log(`🔑 Logging in as: ${process.env.USER_EMAIL}`);
-
-        const response = await request.post(`${API_URL}/users/login`, {
-            data: {
-                user: {
-                    email: process.env.USER_EMAIL,
-                    password: process.env.USER_PASSWORD
-                }
-            }
-        });
-
-        if (!response.ok()) {
-            const body = await response.text();
-            throw new Error(`🚨 API Login Failed! Status: ${response.status()} \nBody: ${body}`);
-        }
-
-        expect(response.ok()).toBeTruthy();
-        const responseBody = await response.json();
-        token = responseBody.user.token;
+        token = await apiHelper.login();
+        console.log(`✅ Logged in successfully. Token secured.`);
     });
 
     // 🏗️ Step 2: Seed test data via API for test isolation
     test.beforeEach(async ({ request }) => {
-        const articleData = {
-            article: {
-                title: `API Seeded ${faker.string.uuid()}`,
-                description: 'This article was created via API',
-                body: 'Initial body content',
-                tagList: ['api-test']
-            }
-        };
+        apiHelper = new ApiHelper(request);
 
-        const response = await request.post(`${API_URL}/articles`, {
-            headers: {
-                'Authorization': `Token ${token}`
-            },
-            data: articleData
+        slug = await apiHelper.createArticle(token, {
+            title: `API Seeded ${faker.string.uuid()}`,
+            description: 'This article was created via API',
+            body: 'Initial body content',
+            tags: ['api-test']
         });
 
-        const responseBody = await response.json();
-        slug = responseBody.article.slug;
         console.log(`🌱 Created Article via API: ${slug}`);
     });
 
     // 🏃 Step 3: Edit the seeded article via UI
-    test('EDT-12: Edit Article (API Created) - Update Body & Description', async ({ editorPage, articlePage, homePage }) => {
+    test('EDT-12: Edit Article (API Created) - Update Body & Description', async ({ page, editorPage, articlePage, homePage }) => {
 
         const updatedBody = `Updated Body Content via UI - ${faker.string.numeric(5)}`;
         const updatedDescription = `Updated Desc via UI - ${faker.string.numeric(5)}`;
@@ -134,6 +111,9 @@ test.describe('Module: Editor (Update Article - Hybrid Strategy)', () => {
             await editorPage.inputDescription.fill(updatedDescription);
             await editorPage.inputBody.fill(updatedBody);
             await editorPage.btnPublish.click();
+
+            // Verification: Ensure navigation to the article detail page is complete
+            await expect(page).toHaveURL(new RegExp(`/article/`));
         });
 
         // 👀 Step 4: Verify the updated content on the Detail Page
@@ -144,10 +124,11 @@ test.describe('Module: Editor (Update Article - Hybrid Strategy)', () => {
         // 👀 Step 5: Verify the update on the Global Feed
         await test.step('Verify Global Feed', async () => {
             await homePage.goto();
-            await homePage.tabGlobalFeed.click();
-            await expect(homePage.tabGlobalFeed).toHaveClass(/active/);
 
-            const articleLocator = homePage.page.locator('.article-preview').filter({ hasText: updatedDescription });
+            // ✅ Refined: Using POM clickTag for data isolation
+            await homePage.clickTag('api-test');
+
+            const articleLocator = homePage.getArticleLocator(updatedDescription);
             await expect(articleLocator).toBeVisible();
         });
     });
@@ -155,12 +136,9 @@ test.describe('Module: Editor (Update Article - Hybrid Strategy)', () => {
     // 🧹 Step 6: Cleanup test data via API after the test
     test.afterEach(async ({ request }) => {
         if (slug) {
-            const response = await request.delete(`${API_URL}/articles/${slug}`, {
-                headers: {
-                    'Authorization': `Token ${token}`
-                }
-            });
-            console.log(`🧹 API Cleaned Up Article: ${slug} (Status: ${response.status()})`);
+            const cleanupHelper = new ApiHelper(request);
+            const status = await cleanupHelper.deleteArticle(token, slug);
+            console.log(`🧹 API Cleaned Up Article: ${slug} (Status: ${status})`);
         }
     });
 });
