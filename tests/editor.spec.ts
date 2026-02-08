@@ -78,7 +78,8 @@ test.describe('Module: Editor (Update Article - Hybrid Strategy)', () => {
     // 🏗️ Step 1: Authenticate via API
     test.beforeAll(async ({ request }) => {
         apiHelper = new ApiHelper(request);
-        console.log(`🔑 Logging in as: ${process.env.USER_EMAIL}`);
+        const loginEmail = process.env.USER_EMAIL || 'username10@gmail.com';
+        console.log(`🔑 Attempting login as: ${loginEmail}`);
         token = await apiHelper.login();
         console.log(`✅ Logged in successfully. Token secured.`);
     });

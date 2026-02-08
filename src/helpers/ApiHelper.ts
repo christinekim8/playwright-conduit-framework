@@ -13,7 +13,9 @@ export class ApiHelper {
     /**
      * @description Authenticates the user and returns the authorization token.
      */
-    async login(email: string = process.env.USER_EMAIL!, password: string = process.env.USER_PASSWORD!) {
+    async login(email: string = process.env.USER_EMAIL || 'username10@gmail.com',
+        password: string = process.env.USER_PASSWORD || 'username10'
+    ) {
         const response = await this.request.post(`${API_URL}/users/login`, {
             data: {
                 user: { email, password }
