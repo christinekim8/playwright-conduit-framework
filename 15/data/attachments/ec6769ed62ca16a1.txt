@@ -1,0 +1,3 @@
+📝 Starting Test for: "Amo cum vomer."
+🌍 Verifying Global Feed...
+✅ Successfully found the article: "Amo cum vomer."
