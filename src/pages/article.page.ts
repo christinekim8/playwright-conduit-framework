@@ -1,5 +1,5 @@
 //src/pages/article.page.ts
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test';
 import { BasePage } from './base.page';
 
 /**
@@ -56,7 +56,10 @@ export class ArticlePage extends BasePage {
         await this.commentInput.fill(text);
         await this.postCommentBtn.click();
 
-        // Wait for the specific comment to appear to prevent race conditions
+        // 1. Ensure the submission has started (the input should clear after a successful post)
+        await expect(this.commentInput).toHaveValue('');
+
+        // 2. Wait for the specific comment to appear in the list        
         await this.commentCards.filter({ hasText: text }).waitFor({ state: 'visible' });
     }
 
