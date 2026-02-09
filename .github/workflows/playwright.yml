@@ -4,6 +4,13 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+
+# Define necessary permissions for the GITHUB_TOKEN to deploy reports
+permissions:
+  contents: write
+  pages: write
+  id-token: write    
+  
 jobs:
   test:
     timeout-minutes: 60
@@ -25,3 +32,28 @@ jobs:
         name: playwright-report
         path: playwright-report/
         retention-days: 30
+
+    # 1. Retrieve Allure history (Ensure report generation regardless of test results)
+    - name: 📊 Get Allure history
+      uses: actions/checkout@v4
+      if: always()
+      continue-on-error: true
+      with:
+        ref: gh-pages
+        path: gh-pages
+
+    - name: 🛠️ Generate Allure Report
+      uses: simple-elf/allure-report-action@master
+      if: always()
+      with:
+        allure_results: allure-results
+        allure_history: allure-history
+        keep_reports: 20
+
+    # 2. Deploy test report to GitHub Pages
+    - name: 🌐 Deploy Report to GitHub Pages
+      if: always()
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: allure-history
