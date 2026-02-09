@@ -40,19 +40,6 @@ Managed the entire development lifecycle using a structured Kanban board to trac
 
 ---
 
-## 📈 Quality Management Workflow
-
-### 1. Test Analysis & Planning (Reverse Engineering)
-Before automation, I analyzed the application to derive detailed test scenarios. Since no formal documentation existed, I created a comprehensive matrix based on exploratory sessions.
-* 📊 **[View Google Sheets: Test Scenario Matrix]**(https://docs.google.com/spreadsheets/d/1ZkSBPep7vtqimvpTUn90P5xdxXk1J76SkOOm3wOl5M8/edit?usp=sharing)
-    * *Includes: Module-based scenarios, Acceptance Criteria, and Automation Priority.*
-
-### 2. Project Orchestration (Kanban)
-Managed the entire development lifecycle using a structured Kanban board to track tasks, priorities, and sprint progress.
-* 📋 **[View Notion: Project Kanban Board]**(https://minkyung-christine.notion.site/Playwright-Automation-Project-2fa921a38d4b8082b39fd90228cdfe35?source=copy_link)
-
----
-
 ## 📂 Project Structure
 ```text
 .
