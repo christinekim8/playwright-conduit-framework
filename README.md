@@ -10,9 +10,50 @@
 </div>
 
 ## 👤 QA Lead's Strategic Overview
-As a QA Lead with 9 years of experience, I engineered this framework to demonstrate a professional-grade automation ecosystem. In an environment without formal PRDs, I utilized **Exploratory Testing** to reverse-engineer business logic and established a **Shift-Left** quality process. 
+As a **QA Lead with 9 years of experience** in leading quality initiatives and defining testing strategies, I engineered this framework to demonstrate a professional-grade automation ecosystem.
 
-This project goes beyond simple scripting; it showcases a **strategic quality roadmap** from test scenario design to high-performance CI/CD orchestration.
+In an environment without formal PRDs, I leveraged my expertise in **Requirement Analysis** and **Exploratory Testing** to reverse-engineer business logic and establish a **Shift-Left** quality process. This project is not just a coding exercise; it is a demonstration of how a senior leader orchestrates technology, AI, and process to deliver business value.
+
+---
+## 🎯 Test Target
+* **Application**: RealWorld Conduit App (Bondar Academy)
+* **URL**: [https://conduit.bondaracademy.com/](https://conduit.bondaracademy.com/)
+* **Description**: A production-ready social blogging platform (Medium.com clone) used to demonstrate advanced E2E automation patterns.
+
+---
+
+## 🏗️ Strategic Quality Leadership (9+ Years Expertise)
+This framework is built upon nearly a decade of SDLC leadership, focusing on high-ROI automation and sustainable architecture.
+
+* **Deep Requirement Analysis:** Analyzed the 'Conduit' application to identify high-risk business flows, ensuring the automation suite covers critical paths (Auth, Editor, Feed) with maximum efficiency.
+
+* **Test Planning Mastery:** Designed a comprehensive Test Scenario Matrix that prioritizes automation based on criticality and technical complexity, rather than random coverage.
+
+* **Architectural Governance:** Applied proven design patterns (POM, Custom Fixtures, Global Setup) refined over 9 years to ensure the code remains maintainable and scalable for large-scale enterprise environments.
+
+---
+
+## 🤖 Strategic AI Collaboration: Human-in-the-Loop
+I utilize a **Multi-Model AI Orchestration** strategy, treating AI as a "Strategic Peer" while maintaining 100% architectural ownership.
+
+**1. Strategic Planning & Strategy (Gemini Pro)**
+* **Role:** Acting as a high-reasoning brainstorming partner for top-down design.
+
+* **Execution:** Leveraged Gemini Pro to derive complex test scenarios and edge cases from exploratory sessions.
+
+* **Leadership:** I manually audited and refined every AI-generated scenario to align with real-world business risks.
+
+**2. Tactical Execution (GitHub Copilot)**
+* **Role:** Real-time pair programmer for development velocity.
+
+* **Execution:** Used Copilot to accelerate TypeScript scripting and POM implementation.
+
+* **Leadership:** Every line of code underwent an Internal Peer Review. I personally directed all refactoring paths and refined asynchronous wait strategies to ensure 100% reliability (zero flakiness).
+
+**3. Intentional Technical Integrity (Why not Cursor?)**
+* While tools like **Cursor** offer automated full-repo indexing, I **intentionally chose not to use them** for this portfolio.
+
+* **The Reason:** To verify that the core architecture, logic, and Playwright implementation are a direct reflection of my personal engineering skills. This framework serves as a "Verified Human-led" project, showcasing my ability to govern AI tools without losing deep technical mastery.
 
 ---
 
@@ -63,20 +104,27 @@ Managed the entire development lifecycle using a structured Kanban board to trac
 To get a local copy up and running, follow these steps:
 
 ### 1. Installation
-#### Install NPM packages
+```bash
+# Clone the repository and navigate to the project directory:
+git clone https://github.com/christinekim8/playwright-conduit-framework.git
+cd playwright-conduit-framework
+
+# Install NPM packages
 npm install
 
-#### Install Playwright Browsers
+# Install Playwright Browsers
 npx playwright install
-
+```
 ### 2. Running Tests
-#### Run all tests (Headless mode)
+```bash
+# Run all tests (Headless mode)
 npx playwright test
-
+```
 ### 3. Generating & Viewing Reports
-#### Generate and open the Allure report locally
+```bash
+# Generate and open the Allure report locally
 npx allure serve allure-results
-
+```
 ---
 
 ## ✍️ Contact & Author
