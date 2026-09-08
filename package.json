@@ -12,6 +12,7 @@
     "@playwright/test": "^1.58.1",
     "@types/node": "^25.1.0",
     "allure-playwright": "^3.4.5",
-    "dotenv": "^17.2.3"
+    "dotenv": "^17.2.3",
+    "typescript": "^7.0.2"
   }
 }

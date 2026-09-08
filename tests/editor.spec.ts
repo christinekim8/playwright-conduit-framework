@@ -16,8 +16,15 @@ import { ApiHelper } from '@helpers/ApiHelper';
  */
 
 test.describe('Module: Editor (Create Article)', () => {
+    let cleanupToken: string;
+    let createdArticleSlug: string | undefined;
 
-    test('EDT-02: Create Article & Verify (Detail + Global Feed)', async ({ editorPage, articlePage, homePage }) => {
+    test.beforeAll(async ({ request }) => {
+        const apiHelper = new ApiHelper(request);
+        cleanupToken = await apiHelper.login();
+    });
+
+    test('EDT-02: Create Article & Verify (Detail + Global Feed)', async ({ page, editorPage, articlePage, homePage }) => {
 
         // 🏗️ Step 0: Article Data Preparation
         const articleData = {
@@ -34,6 +41,9 @@ test.describe('Module: Editor (Create Article)', () => {
             await editorPage.goto();
 
             await editorPage.submitArticle(articleData);
+            await expect(page).toHaveURL(/\/article\/[^/]+$/);
+            const articlePath = new URL(page.url()).pathname;
+            createdArticleSlug = articlePath.split('/').pop();
         });
 
         // 👀 Step 2: Verify the article detail page
@@ -66,6 +76,15 @@ test.describe('Module: Editor (Create Article)', () => {
 
             console.log(`✅ Successfully found the article: "${articleData.title}"`);
         });
+    });
+
+    test.afterEach(async ({ request }) => {
+        if (createdArticleSlug) {
+            const cleanupHelper = new ApiHelper(request);
+            const status = await cleanupHelper.deleteArticle(cleanupToken, createdArticleSlug);
+            console.log(`🧹 API Cleaned Up Article: ${createdArticleSlug} (Status: ${status})`);
+            createdArticleSlug = undefined;
+        }
     });
 });
 

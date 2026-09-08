@@ -11,8 +11,12 @@ async function globalSetup(config: FullConfig) {
     const { baseURL, storageState } = config.projects[0].use;
 
     // Use environment variables for security, but provide fallback credentials for easier local execution.
-    const userEmail = process.env.USER_EMAIL || 'username10@gmail.com';
-    const password = process.env.USER_PASSWORD || 'username10';
+    const userEmail = process.env.USER_EMAIL;
+    const password = process.env.USER_PASSWORD;
+
+    if (!userEmail || !password) {
+        throw new Error('USER_EMAIL and USER_PASSWORD must be configured');
+    }
 
     console.log(`🔵 Global Setup: Trying to auth via API (UserEmail: ${userEmail})`);
 

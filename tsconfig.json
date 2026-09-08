@@ -8,22 +8,19 @@
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "resolveJsonModule": true,
     "isolatedModules": true,
 
-    /* Base URL for path mapping */
-    "baseUrl": ".",
-    
     /* Path Aliases */
     "paths": {
-      "@api/*": ["src/api/*"],
-      "@pages/*": ["src/pages/*"],
-      "@utils/*": ["src/utils/*"],
-      "@fixtures/*": ["src/fixtures/*"],
-      "@types/*": ["src/types/*"],
-      "@helpers/*": ["src/helpers/*"]
+      "@api/*": ["./src/api/*"],
+      "@pages/*": ["./src/pages/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@fixtures/*": ["./src/fixtures/*"],
+      "@types/*": ["./src/types/*"],
+      "@helpers/*": ["./src/helpers/*"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx", "playwright.config.ts"],
