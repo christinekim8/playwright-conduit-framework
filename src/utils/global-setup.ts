@@ -10,7 +10,7 @@ import fs from 'fs';
 async function globalSetup(config: FullConfig) {
     const { baseURL, storageState } = config.projects[0].use;
 
-    // Use environment variables for security, but provide fallback credentials for easier local execution.
+    // Use environment variables for security.
     const userEmail = process.env.USER_EMAIL;
     const password = process.env.USER_PASSWORD;
 
