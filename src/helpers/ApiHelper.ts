@@ -10,24 +10,16 @@ export class ApiHelper {
         this.request = request;
     }
 
-    private getCredentials() {
-        const email = process.env.USER_EMAIL;
-        const password = process.env.USER_PASSWORD;
-
-        if (!email || !password) {
-            throw new Error('Missing USER_EMAIL / USER_PASSWORD. Set them in GitHub Actions secrets or a local environment.');
-        }
-
-        return { email, password };
-    }
-
     /**
      * @description Authenticates the user and returns the authorization token.
      */
     async login(email?: string, password?: string) {
-        const credentials = this.getCredentials();
-        const loginEmail = email ?? credentials.email;
-        const loginPassword = password ?? credentials.password;
+        const loginEmail = email ?? process.env.USER_EMAIL;
+        const loginPassword = password ?? process.env.USER_PASSWORD;
+
+        if (!loginEmail || !loginPassword) {
+            throw new Error('Missing USER_EMAIL / USER_PASSWORD. Set them in GitHub Actions secrets or a local environment.');
+        }
 
         const response = await this.request.post(`${API_URL}/users/login`, {
             data: {
