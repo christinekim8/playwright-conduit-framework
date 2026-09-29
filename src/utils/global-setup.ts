@@ -1,11 +1,12 @@
 //src/utils/global-setup.ts
 import { request, FullConfig } from '@playwright/test';
 import fs from 'fs';
+import path from 'path';
 
 /**
  * Global Setup Utility
  * Purpose: Performs API-based authentication before the test suite starts.
- * Benefit: Saves the authenticated state (JWT) into 'state.json' to bypass UI login for all tests, significantly reducing execution time.
+ * Benefit: Saves the authenticated state (JWT) into '.auth/state.json' to bypass UI login for all tests, significantly reducing execution time.
  */
 async function globalSetup(config: FullConfig) {
     const { baseURL, storageState } = config.projects[0].use;
@@ -63,9 +64,11 @@ async function globalSetup(config: FullConfig) {
 
     // 5. Save state to file
     // This file will be reused by all tests defined in playwright.config.ts to set the authenticated state.
-    fs.writeFileSync(storageState as string, JSON.stringify(state));
+    const storageStatePath = storageState as string;
+    fs.mkdirSync(path.dirname(storageStatePath), { recursive: true });
+    fs.writeFileSync(storageStatePath, JSON.stringify(state));
 
-    console.log('✅ Global Setup completed: Login successful and state.json saved.');
+    console.log('✅ Global Setup completed: Login successful and storage state saved.');
 }
 
 export default globalSetup;

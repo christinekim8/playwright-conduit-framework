@@ -28,8 +28,8 @@ export default defineConfig({
   use: {
     /* Base URL */
     baseURL: 'https://conduit.bondaracademy.com',
-    // Inject the login state (state.json) created by global setup
-    storageState: 'state.json',
+    // Inject the login state created by global setup
+    storageState: '.auth/state.json',
 
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
