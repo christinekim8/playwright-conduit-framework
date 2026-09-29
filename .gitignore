@@ -1,9 +1,11 @@
+# Dependencies
 node_modules/
+
+# Test reports and artifacts
 /test-results/
 /playwright-report/
-/blob-report/
-/playwright/.cache/
-/playwright/.auth/
-.env
-.auth/
 allure-results/
+
+# Local credentials and authentication state
+.env
+/.auth/
