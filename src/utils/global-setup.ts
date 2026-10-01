@@ -19,7 +19,7 @@ async function globalSetup(config: FullConfig) {
         throw new Error('USER_EMAIL and USER_PASSWORD must be configured');
     }
 
-    console.log(`🔵 Global Setup: Trying to auth via API (UserEmail: ${userEmail})`);
+    console.log('🔵 Global Setup: Trying to auth via API.');
 
     const requestContext = await request.newContext();
 
