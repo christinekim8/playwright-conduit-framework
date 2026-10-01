@@ -1,0 +1,4 @@
+📝 Starting Test for: "Cogito amaritudo baiulus."
+🌍 Verifying Global Feed...
+✅ Successfully found the article: "Cogito amaritudo baiulus."
+🧹 API Cleaned Up Article: Cogito-amaritudo-baiulus.-46041 (Status: 204)
