@@ -18,6 +18,7 @@ jobs:
     container:
       image: mcr.microsoft.com/playwright:v1.58.1-noble
     env:
+      HOME: /root
       USER_EMAIL: ${{ secrets.USER_EMAIL }}
       USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
     steps:
