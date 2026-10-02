@@ -76,7 +76,7 @@ Managed the entire development lifecycle using a structured Kanban board to trac
 * **Hybrid Testing Strategy (API + UI):** Implemented high-speed data seeding via API to bypass redundant UI flows, optimizing execution time while maintaining 100% reliability.
 * **Page Object Model (POM):** Architected a scalable and maintainable POM structure to minimize maintenance overhead.
 * **Data Factory & Management:** Utilized dynamic data generation with `@faker-js` to ensure zero data collisions during parallel execution.
-* **Infrastructure & CI/CD:** Integrated **GitHub Actions** for automated regression on every push, with real-time **Allure Reporting** hosted on GitHub Pages.
+* **Infrastructure & CI/CD:** Integrated **GitHub Actions** with a Playwright-version-matched Docker image for automated regression on every push, with real-time **Allure Reporting** hosted on GitHub Pages.
 * **Resilience & Stability:** Advanced error handling, network mocking for edge-case validation, and race-condition mitigation.
 
 ---
@@ -109,35 +109,36 @@ To get a local copy up and running, follow these steps:
 git clone https://github.com/christinekim8/playwright-conduit-framework.git
 cd playwright-conduit-framework
 
-# Install NPM packages
-npm install
-
-# Install Playwright Browsers
-npx playwright install
+# Copy the example environment file and add your Conduit account credentials.
+# PowerShell:
+Copy-Item .env.example .env
+# macOS/Linux:
+cp .env.example .env
 ```
 
-### Optional: Configure the target environment
-By default, tests use the Bondar Academy Conduit application and API. To target another environment, set these variables in your local `.env` file or CI environment:
-```env
-APP_URL=https://conduit.bondaracademy.com
-API_URL=https://conduit-api.bondaracademy.com/api
-```
+Edit `.env` and replace `USER_EMAIL` and `USER_PASSWORD` with valid account credentials. The `.env` file is ignored by Git and must not be committed.
 
-### 2. Running Tests
+### 2. Run tests with Docker
+Docker Desktop (including Docker Compose) is the only local prerequisite. The first run builds the Playwright image and installs npm dependencies inside it; no local Node.js, npm packages, or browser installation is needed.
 ```bash
-# Run all tests (Headless mode)
-npm test
+# Run all tests in Chromium, Firefox, and WebKit
+docker compose run --build --rm playwright
 
-# Run tests in Chromium only
-npm run test:chromium
-
-# Check TypeScript types
-npm run typecheck
+# Run only Chromium tests
+docker compose run --build --rm playwright npm run test:chromium
 ```
-### 3. Generating & Viewing Reports
+
+Test results and reports are written to `test-results/`, `playwright-report/`, and `allure-results/` on the host.
+
+To target another application environment, update `APP_URL` and `API_URL` in `.env`.
+
+### 3. Type-check and view the HTML report
 ```bash
-# Open the Playwright HTML report after a test run
-npm run report
+# Type-check inside the container
+docker compose run --build --rm playwright npm run typecheck
+
+# Serve the report at http://localhost:9323
+docker compose run --build --rm --service-ports playwright npm run report -- --host 0.0.0.0
 ```
 ---
 

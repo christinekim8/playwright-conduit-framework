@@ -9,3 +9,7 @@ allure-results/
 # Local credentials and authentication state
 .env
 /.auth/
+
+# Docker environment file copied from .env.example
+.env.*
+!.env.example

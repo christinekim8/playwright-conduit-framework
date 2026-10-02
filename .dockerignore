@@ -1,0 +1,7 @@
+.git
+.env*
+.auth
+node_modules
+test-results
+playwright-report
+allure-results
