@@ -118,12 +118,18 @@ npx playwright install
 ### 2. Running Tests
 ```bash
 # Run all tests (Headless mode)
-npx playwright test
+npm test
+
+# Run tests in Chromium only
+npm run test:chromium
+
+# Check TypeScript types
+npm run typecheck
 ```
 ### 3. Generating & Viewing Reports
 ```bash
-# Generate and open the Allure report locally
-npx allure serve allure-results
+# Open the Playwright HTML report after a test run
+npm run report
 ```
 ---
 

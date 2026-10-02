@@ -3,6 +3,42 @@ import { APIRequestContext } from '@playwright/test';
 import { API_URL } from '../../playwright.config';
 import { faker } from '@faker-js/faker';
 
+type LoginResponse = {
+    user: {
+        token: string;
+    };
+};
+
+type CreateArticleResponse = {
+    article: {
+        slug: string;
+    };
+};
+
+function isLoginResponse(value: unknown): value is LoginResponse {
+    if (typeof value !== 'object' || value === null || !('user' in value)) {
+        return false;
+    }
+
+    const user = value.user;
+    return typeof user === 'object'
+        && user !== null
+        && 'token' in user
+        && typeof user.token === 'string';
+}
+
+function isCreateArticleResponse(value: unknown): value is CreateArticleResponse {
+    if (typeof value !== 'object' || value === null || !('article' in value)) {
+        return false;
+    }
+
+    const article = value.article;
+    return typeof article === 'object'
+        && article !== null
+        && 'slug' in article
+        && typeof article.slug === 'string';
+}
+
 export class ApiHelper {
     private request: APIRequestContext;
 
@@ -13,7 +49,7 @@ export class ApiHelper {
     /**
      * @description Authenticates the user and returns the authorization token.
      */
-    async login(email?: string, password?: string) {
+    async login(email?: string, password?: string): Promise<string> {
         const loginEmail = email ?? process.env.USER_EMAIL;
         const loginPassword = password ?? process.env.USER_PASSWORD;
 
@@ -32,14 +68,21 @@ export class ApiHelper {
             throw new Error(`🚨 API Login Failed! Status: ${response.status()} \nBody: ${body}`);
         }
 
-        const responseBody = await response.json();
+        const responseBody: unknown = await response.json();
+        if (!isLoginResponse(responseBody)) {
+            throw new Error('API Login Failed! Response did not contain a valid user token.');
+        }
+
         return responseBody.user.token;
     }
 
     /**
      * @description Seeds a new article and returns its slug for testing.
      */
-    async createArticle(token: string, data: { title: string, description: string, body: string, tags?: string[] }) {
+    async createArticle(
+        token: string,
+        data: { title: string; description: string; body: string; tags?: string[] }
+    ): Promise<string> {
         const response = await this.request.post(`${API_URL}/articles`, {
             headers: { 'Authorization': `Token ${token}` },
             data: {
@@ -52,9 +95,16 @@ export class ApiHelper {
             }
         });
 
-        if (!response.ok()) throw new Error('🚨 Failed to create article');
+        if (!response.ok()) {
+            const body = await response.text();
+            throw new Error(`Failed to create article. Status: ${response.status()}. Body: ${body}`);
+        }
 
-        const body = await response.json();
+        const body: unknown = await response.json();
+        if (!isCreateArticleResponse(body)) {
+            throw new Error('Failed to create article. Response did not contain a valid article slug.');
+        }
+
         return body.article.slug;
     }
 
@@ -85,7 +135,12 @@ export class ApiHelper {
     /**
      * @description Seeds multiple articles for testing purposes.
      */
-    async seedArticles(token: string, count: number, targetTitle: string, tags: string[] = ['test']) {
+    async seedArticles(
+        token: string,
+        count: number,
+        targetTitle: string,
+        tags: string[] = ['test']
+    ): Promise<string[]> {
         console.log(`🌱 Seeding ${count} articles via API...`);
 
         const promises = Array.from({ length: count }).map((_, i) => {
@@ -109,7 +164,7 @@ export class ApiHelper {
     /**
      * @description Cleans up multiple articles given their slugs.
      */
-    async cleanupArticles(token: string, slugs: string[]) {
+    async cleanupArticles(token: string, slugs: string[]): Promise<void> {
         console.log(`🧹 Starting cleanup for ${slugs.length} articles...`);
         for (const slug of slugs) {
             await this.deleteArticle(token, slug);
