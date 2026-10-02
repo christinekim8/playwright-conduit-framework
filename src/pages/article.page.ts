@@ -29,7 +29,7 @@ export class ArticlePage extends BasePage {
         super(page);
 
         // Hero Banner Section
-        this.articleTitle = page.locator('.banner h1');
+        this.articleTitle = page.getByRole('heading', { level: 1 });
         this.articleAuthor = page.locator('.banner .author');
         this.dateLabel = page.locator('.banner .date');
         this.editButton = page.locator('.banner').getByRole('link', { name: 'Edit Article' });
@@ -42,7 +42,7 @@ export class ArticlePage extends BasePage {
         // Comment Section
         this.commentForm = page.locator('form.comment-form');
         this.commentInput = page.getByPlaceholder('Write a comment...');
-        this.postCommentBtn = page.locator('button', { hasText: 'Post Comment' });
+        this.postCommentBtn = page.getByRole('button', { name: 'Post Comment' });
         this.commentCards = page.locator('app-article-comment');
     }
 
@@ -69,7 +69,7 @@ export class ArticlePage extends BasePage {
      */
     async deleteComment(commentText: string) {
         const targetCard = this.commentCards.filter({ hasText: commentText });
-        await targetCard.locator('.mod-options .ion-trash-a').click();
+        await targetCard.locator('span.mod-options').click();
 
         // Ensure the comment is removed from the DOM
         await targetCard.waitFor({ state: 'hidden' });

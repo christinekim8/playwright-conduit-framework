@@ -61,16 +61,24 @@ export class ApiHelper {
     /**
      * @description Deletes an article using its slug. (Cleanup)
      */
-    async deleteArticle(token: string, slug: string) {
+    async deleteArticle(token: string, slug: string): Promise<number> {
         const response = await this.request.delete(`${API_URL}/articles/${slug}`, {
             headers: {
                 'Authorization': `Token ${token}`
             }
         });
 
-        if (!response.ok() && response.status() !== 404) {
-            console.error(`⚠️ API Cleanup Failed for slug: ${slug}`);
+        if (response.status() === 404) {
+            return response.status();
         }
+
+        if (!response.ok()) {
+            const body = await response.text();
+            throw new Error(
+                `Failed to delete article "${slug}". Status: ${response.status()}. Body: ${body}`
+            );
+        }
+
         return response.status();
     }
 

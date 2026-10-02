@@ -47,7 +47,7 @@ test.describe('Module: Network Mocking', () => {
 
         // 🏗️ Step 1: Intercept API and force a 500 Internal Server Error
         // Wildcard pattern ensures interception of dynamic query parameters.
-        await page.route('**/api/articles?*', async (route) => {
+        await page.route('**/api/articles*', async (route) => {
             await route.fulfill({
                 status: 500,
                 contentType: 'application/json',
@@ -61,7 +61,7 @@ test.describe('Module: Network Mocking', () => {
 
         // 👀 Step 3: Verify the UI handles the server failure gracefully
         await test.step('Verify error message on UI', async () => {
-            // ✅ Refined: Verifying that the app displays a fallback or loading state gracefully
+            // This reflects the current application behavior under a 500 response.
             await expect(homePage.articleListContainer).toContainText('Loading articles...');
         });
     });

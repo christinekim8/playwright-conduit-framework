@@ -12,13 +12,13 @@ export class SettingsPage extends BasePage {
     constructor(page: Page) {
         super(page);
 
-        this.inputUrl = page.locator('input[placeholder="URL of profile picture"]');
-        this.inputBio = page.locator('textarea[placeholder="Short bio about you"]');
-        this.inputPassword = page.locator('input[placeholder="New Password"]');
-        this.buttonUpdateSettings = page.locator('button[type="submit"]');
+        this.inputUrl = page.getByPlaceholder('URL of profile picture');
+        this.inputBio = page.getByPlaceholder('Short bio about you');
+        this.inputPassword = page.getByPlaceholder('New Password');
+        this.buttonUpdateSettings = page.getByRole('button', { name: 'Update Settings' });
         
         // "Or click here to logout." button
-        this.buttonLogout = page.locator('button.btn-outline-danger');
+        this.buttonLogout = page.getByRole('button', { name: 'Or click here to logout.' });
     }
 
     // Actions
