@@ -1,9 +1,12 @@
 import { defineConfig, devices } from '@playwright/test';
 import * as dotenv from 'dotenv';
-//API URL
-export const API_URL = 'https://conduit-api.bondaracademy.com/api';
 
 dotenv.config();
+
+export const APP_URL = process.env.APP_URL ?? 'https://conduit.bondaracademy.com';
+export const API_URL = process.env.API_URL ?? 'https://conduit-api.bondaracademy.com/api';
+
+process.env.API_URL = API_URL;
 
 export default defineConfig({
   testDir: './tests',
@@ -27,7 +30,7 @@ export default defineConfig({
 
   use: {
     /* Base URL */
-    baseURL: 'https://conduit.bondaracademy.com',
+    baseURL: APP_URL,
     // Inject the login state created by global setup
     storageState: '.auth/state.json',
 

@@ -115,6 +115,14 @@ npm install
 # Install Playwright Browsers
 npx playwright install
 ```
+
+### Optional: Configure the target environment
+By default, tests use the Bondar Academy Conduit application and API. To target another environment, set these variables in your local `.env` file or CI environment:
+```env
+APP_URL=https://conduit.bondaracademy.com
+API_URL=https://conduit-api.bondaracademy.com/api
+```
+
 ### 2. Running Tests
 ```bash
 # Run all tests (Headless mode)
