@@ -50,11 +50,6 @@ I utilize a **Multi-Model AI Orchestration** strategy, treating AI as a "Strateg
 
 * **Leadership:** Every line of code underwent an Internal Peer Review. I personally directed all refactoring paths and refined asynchronous wait strategies to ensure 100% reliability (zero flakiness).
 
-**3. Intentional Technical Integrity (Why not Cursor?)**
-* While tools like **Cursor** offer automated full-repo indexing, I **intentionally chose not to use them** for this portfolio.
-
-* **The Reason:** To verify that the core architecture, logic, and Playwright implementation are a direct reflection of my personal engineering skills. This framework serves as a "Verified Human-led" project, showcasing my ability to govern AI tools without losing deep technical mastery.
-
 ---
 
 ## 📈 Quality Management Workflow
